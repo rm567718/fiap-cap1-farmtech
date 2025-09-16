@@ -2,6 +2,11 @@
 CLI: interação via terminal (menus, inputs, prints).
 """
 
+#No meu criei a possibilidade de cadastra areas sem ter que completar o tratamento, para testes
+# o menu abaixo exibe novamente, caso necessario
+show_areas_menu = False
+
+
 from typing import Optional
 from python_app.config import (
     config_culturas,
@@ -55,6 +60,18 @@ def escolher_cultura() -> Optional[str]:
 def escolher_manejo() -> Optional[str]:
     return escolher_em_lista("Escolha o manejo:", classes_manejo)
 
+#define padrao para os valores em Pt_br
+def br(x, casas=2):
+    try:
+        s = f"{float(x):,.{casas}f}"
+        return s.replace(",", "X").replace(".", ",").replace("X", ".")
+    except Exception:
+        return str(x)
+
+#padroniza acentos no formato, caso exita
+def geom_pt(code: str) -> str:
+    return {"RETANGULO": "RETÂNGULO", "CIRCULO": "CÍRCULO"}.get(code.upper(), code)
+
 
 # ------------------------
 # AREAS - CRUD por cultura
@@ -87,7 +104,8 @@ def areas_inserir():
     
     #cria um index conforme registro e retorna mensagem
     idx = st.areas_criar(cultura, area)
-    print(f" Área adicionada em {cultura}. Ind: {idx} | {area['area_ha']:.4f} ha no formato {area["geometria"]}")
+    print(f"Área adicionada em {cultura}. Índice: {idx} | {geom_pt(area['geometria'])} | {br(area['area_ha'],4)} ha")
+
 
 # lista as areas registradas na cultura, traz retorno se vazio 
 def areas_listar():
@@ -155,10 +173,14 @@ def areas_deletar():
 #permite listar as areas cadastradas das culturas
 def areas_listar_especifica(cultura: str):
     vetor = st.areas_listar(cultura)
+    if not vetor:
+        print(f"(vazio) Não há áreas para {cultura}.")
+        return
     print(f"\nÁreas de {cultura}:")
     for i, r in enumerate(vetor):
-        print(f"[{i}] {r['geometria']} params={r['params']} "
-              f"area_m2={r['area_m2']:.2f} area_ha={r['area_ha']:.4f}")
+        geom = geom_pt(r["geometria"])
+        print(f"[{i}] {geom} params={r['params']} "
+              f"área={br(r['area_m2'])} m² ({br(r['area_ha'],4)} ha)")
         
 
 # ------------------------
@@ -267,23 +289,60 @@ def tratamentos_inserir():
 def _print_resumo_tratamento(idx: int, t: dict):
     print("\n======= RESUMO DO TRATAMENTO =======")
     print(f"Índice: {idx} | Cultura: {t['cultura']} | Manejo: {t['manejo']}")
-    print(f"Área do talhão: {t['area_ha']:.4f} ha")
-    print("Produtos:")
-    for i, p in enumerate(t["produtos"], 1):
-        print(f"  {i}) {p['ativo']} | dose={p['dose_ha']} {p['unidade']} "
-              f"| aplicações={p['aplicacoes']} | TOTAL={p['total']:.4f}")
-    print(f"Área equivalente tratada (ha-aplic): {t['area_eq_tratada']:.4f}")
+    print(f"Área do talhão: {br(t['area_ha'],4)} ha\n")
 
-#funcao apra retornar os tratamentos cadastrados
+    # Cabeçalho
+    h = ["#", "Produtos", "Dose/ha", "Unid", "Aplic.", "Total"]
+    print(f"{h[0]:>2} │ {h[1]:<26} │ {h[2]:>10} │ {h[3]:<6} │ {h[4]:>6} │ {h[5]:>12}")
+    print("───┼────────────────────────────┼────────────┼────────┼────────┼────────────────")
+
+    # Linhas
+    for i, p in enumerate(t["produtos"], 1):
+        dose = br(p["dose_ha"], 3)
+        total = br(p["total"], 4)
+        print(f"{i:>2} │ {p['ativo']:<26} │ {dose:>10} │ {p['unidade']:<6} │ {p['aplicacoes']:>6} │ {total:>12}")
+
+    print("───┴────────────────────────────┴────────────┴────────┴────────┴────────────────")
+    print(f"Área equivalente tratada (ha-aplic): {br(t['area_eq_tratada'],4)}")
+
+
+#funcao apra retornar os tratamentos cadastrados e permite selecionar entre visao resumida e detalhada
 def tratamentos_listar():
     vetor = st.trat_listar()
     if not vetor:
         print("(vazio) Nenhum tratamento cadastrado.")
         return
-    print("\nTratamentos:")
+
+    print("\nListar tratamentos — escolha a visão:")
+    print("[1] Resumo (lista compacta)")
+    print("[2] Detalhada (selecionar 1 tratamento)")
+    op = ler_int("Opção: ")
+    if op == 1:
+        tratamentos_listar_resumido()
+    elif op == 2:
+        tratamentos_listar_detalhado()
+    else:
+        print("Opção inválida.")
+
+#visão dos tratamentos mais resumida, apenas totais
+def tratamentos_listar_resumido():
+    vetor = st.trat_listar()
+    print("\nTratamentos (resumo):")
     for i, t in enumerate(vetor):
-        print(f"[{i}] {t['cultura']} | {t['manejo']} | área={t['area_ha']:.4f} ha "
-              f"| ha-aplic={t['area_eq_tratada']:.4f} | n_produtos={len(t['produtos'])}")
+        print(f"[{i}] {t['cultura']} | {t['manejo']} | área={br(t['area_ha'],4)} ha "
+              f"| ha-aplic={br(t['area_eq_tratada'],4)} | n_produtos={len(t['produtos'])}")
+
+#visão dos tratamentos mais detalhada, por produtos
+def tratamentos_listar_detalhado():
+    vetor = st.trat_listar()
+    print("\nSelecione o tratamento para ver detalhes:")
+    for i, t in enumerate(vetor):
+        print(f"[{i}] {t['cultura']} | {t['manejo']} | n_produtos={len(t['produtos'])}")
+    idx = ler_int("Índice: ")
+    if 0 <= idx < len(vetor):
+        _print_resumo_tratamento(idx, vetor[idx])
+    else:
+        print("Índice inválido.")
 
 # permite validar os cadastros existentes para somente deletar e inserir novo registro
 def tratamentos_atualizar():
@@ -331,25 +390,38 @@ def exportar_csvs():
 #permite validar o input e encerrar corretamente o sistema
 def menu():
     while True:
-        print("\n===== FarmTech Solutions =====")
-        print("ÁREAS")
-        print("[1] Inserir  [2] Listar  [3] Atualizar  [4] Deletar")
-        print("TRATAMENTOS")
-        print("[5] Inserir  [6] Listar  [7] Atualizar  [8] Deletar")
-        print("[9] Exportar CSVs (para R)")
-        print("[0] Sair")
-        op = input("Opção: ").strip()
-        if   op == "1": areas_inserir()
-        elif op == "2": areas_listar()
-        elif op == "3": areas_atualizar()
-        elif op == "4": areas_deletar()
-        elif op == "5": tratamentos_inserir()
-        elif op == "6": tratamentos_listar()
-        elif op == "7": tratamentos_atualizar()
-        elif op == "8": tratamentos_deletar()
-        elif op == "9": exportar_csvs()
-        elif op == "0":
-            print("Encerrando...")
-            break
+        print("\n===== FARMTECH SOLUTIONS =====\n")
+        print("Calcule sua demanda de insumos em poucos minutos!")
+        print("Culturas disponiveis: " + " | ".join(config_culturas))
+        if show_areas_menu:
+            print("\nÁREAS")
+            print("[1] Inserir  [2] Listar  [3] Atualizar  [4] Deletar")
+            print("\nTratamentos/Manejos")
+            print("[5] Inserir  [6] Listar  [7] Atualizar  [8] Deletar")
+            print("[9] Exportar CSVs (para R)")
+            print("[0] Sair")
+            op = input("\nOpção: ").strip()
+            if   op == "1": areas_inserir()
+            elif op == "2": areas_listar()
+            elif op == "3": areas_atualizar()
+            elif op == "4": areas_deletar()
+            elif op == "5": tratamentos_inserir()
+            elif op == "6": tratamentos_listar()
+            elif op == "7": tratamentos_atualizar()
+            elif op == "8": tratamentos_deletar()
+            elif op == "9": exportar_csvs()
+            elif op == "0": break
+            else: print("Opção inválida.")
         else:
-            print("Opção inválida.")
+            print("\nTratamentos/Manejos")
+            print("[1] Inserir  [2] Listar  [3] Atualizar  [4] Deletar")
+            print("[9] Exportar CSVs (para R)")
+            print("[0] Sair")
+            op = input("\nOpção: ").strip()
+            if   op == "1": tratamentos_inserir()
+            elif op == "2": tratamentos_listar()
+            elif op == "3": tratamentos_atualizar()
+            elif op == "4": tratamentos_deletar()
+            elif op == "9": exportar_csvs()
+            elif op == "0": break
+            else: print("Opção inválida.")
