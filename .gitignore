@@ -1,0 +1,19 @@
+# NUNCA versionar chaves/segredos
+.ssh/
+*.env
+
+# Python
+__pycache__/
+*.pyc
+
+# R / RStudio
+.Rhistory
+.RData
+.Rproj.user
+
+# Dados gerados
+python_app/data/*.csv
+
+# Vídeos/arquivos grandes
+*.mp4
+*.mov
