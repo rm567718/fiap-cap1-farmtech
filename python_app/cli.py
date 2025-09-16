@@ -378,7 +378,7 @@ def tratamentos_deletar():
 
 #exporta csv e retorna confirmacao
 def exportar_csvs():
-    st.export_csvs()
+    st.export_csv()
     print("CSVs gerados em python_app/data/")
 
 
