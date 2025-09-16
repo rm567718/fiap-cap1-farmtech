@@ -305,7 +305,6 @@ def _print_resumo_tratamento(idx: int, t: dict):
     print("───┴────────────────────────────┴────────────┴────────┴────────┴────────────────")
     print(f"Área equivalente tratada (ha-aplic): {br(t['area_eq_tratada'],4)}")
 
-
 #funcao apra retornar os tratamentos cadastrados e permite selecionar entre visao resumida e detalhada
 def tratamentos_listar():
     vetor = st.trat_listar()

@@ -1,5 +1,10 @@
-#Esses sistema foca em tratamentos Crop Protection, então não considerei fertilizantes ou 
-#sementes por utilizarem outros cálculos de insumos.
+"""
+1) Esses sistema foca em tratamentos Crop Protection, então não considerei fertilizantes ou 
+sementes por utilizarem outros cálculos de insumos;
+2) Inclui no projeto os manejos/tratamentos existentes em cada cultura;
+3) Pensei em simplificar a linguagem para a vivencia do campo;
+4) Evitei o uso de marcas comerciais dos produtos
+"""
  
 # definicao culturas do sistema
 config_culturas = ["Milho","Soja","Cafe"]
@@ -8,7 +13,6 @@ config_culturas = ["Milho","Soja","Cafe"]
 classes_manejo = ["Herbicida", "Fungicida", "Inseticida", "Biologico"]
 
 # listagem dos produtos (ativos) relativos a cada classe em cada cultura
-# evitei o uso de marcas comerciais e considerei os principais tratamentos em cada cultura
 ativo_cultura_manejo = {
     "Milho": {
         "Herbicida":   ["glyphosate", "atrazine", "nicosulfuron"],
