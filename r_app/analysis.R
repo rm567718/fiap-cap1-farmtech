@@ -6,6 +6,7 @@ message("== Análise estatística (R) ==")
 # -------------------------
 # Helpers
 # -------------------------
+
 read_csv_safe <- function(path) {
   if (!file.exists(path)) {
     message(sprintf("(!) Arquivo não encontrado: %s", path))
@@ -20,12 +21,14 @@ read_csv_safe <- function(path) {
 
 num <- function(x) suppressWarnings(as.numeric(x))
 
+#exibicao em formato tabela
 print_table <- function(df, title=NULL) {
   if (!is.null(title)) cat("\n", title, "\n", sep="")
   if (is.null(df) || nrow(df)==0) { cat("(vazio)\n"); return(invisible(NULL)) }
   print(df, row.names = FALSE, right = FALSE)
 }
 
+#contagem de linhas exibidas e totais para head
 print_head <- function(df, title=NULL, n=5) {
   if (!is.null(title)) cat("\n", title, "\n", sep="")
   if (is.null(df) || nrow(df)==0) { cat("(vazio)\n"); return(invisible(NULL)) }
@@ -84,7 +87,7 @@ if (!is.null(prod) && nrow(prod) > 0) {
 
 
 
-# BLOCO 2 — ANALÍTICO
+# BLOCO 2 — ANALYTIC
 cat("\n
 # =========================================================
 # BLOCO 2 — ANALÍTICO

@@ -2,10 +2,11 @@
 CLI: interação via terminal (menus, inputs, prints).
 """
 
-#No meu criei a possibilidade de cadastra areas sem ter que completar o tratamento, para testes
+#Nesse sistema criei a possibilidade de cadastrar areas sem ter que completar o tratamento, para testes
 # o menu abaixo exibe novamente, caso necessario
 show_areas_menu = False
 
+from datetime import date
 
 from typing import Optional
 from python_app.config import (
@@ -409,7 +410,9 @@ def menu():
             elif op == "7": tratamentos_atualizar()
             elif op == "8": tratamentos_deletar()
             elif op == "9": exportar_csvs()
-            elif op == "0": break
+            elif op == "0": 
+                print("Encerrando...")
+                break
             else: print("Opção inválida.")
         else:
             print("\nTratamentos/Manejos")
@@ -422,5 +425,7 @@ def menu():
             elif op == "3": tratamentos_atualizar()
             elif op == "4": tratamentos_deletar()
             elif op == "9": exportar_csvs()
-            elif op == "0": break
+            elif op == "0":  
+                print("Encerrando...")
+                break
             else: print("Opção inválida.")
