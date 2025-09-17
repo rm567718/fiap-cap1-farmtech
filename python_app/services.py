@@ -17,7 +17,7 @@ def validar_positivo(valor: float, nome: str) -> None:
     
     # se nao satisfeito, avisa o nome do campo e o valor incorreto
     except Exception as e:
-        raise ValueError(f"{nome} inválido: {v}") from e
+        raise ValueError(f"{nome} inválido: {valor!r}") from e
     
     # se satisfeito mas o valor é negativo, avisa o valor incorreto
     if v <=0:

@@ -5,7 +5,6 @@
 4) CSVs com separador ';' e floats no padrão ponto. """
 
 import os, csv, json
-from typing import Dict, list
 
 #Importa as culturas do config.py
 from python_app.config import config_culturas
@@ -14,7 +13,7 @@ from python_app.config import config_culturas
 #---------------------
 # VETORES EM MEMORIA
 
-areas: Dict[str, list[dict]] = {c: [] for c in config_culturas}
+areas: dict[str, list[dict]] = {c: [] for c in config_culturas}
 tratamentos: list[dict] = []
 
 #---------------------
@@ -26,7 +25,7 @@ def areas_listar(cultura: str) -> list[dict]:
     assert_cultura(cultura)
 
     #retonar as areas listadas
-    return areas(cultura)
+    return areas[cultura]
 
 def areas_criar(cultura: str, area_dict: dict) -> int:
     
@@ -109,7 +108,7 @@ def export_csv(dirpath: str = "python_app/data") -> None:
     
     for cultura, vetor in areas.items():
 
-# 1 - Area por cultura
+    # 1 - Area por cultura
 
         #gera um arquivo para cada cultura
         fpath = os.path.join(dirpath, f"export_areas_{cultura.lower()}.csv")
@@ -128,44 +127,44 @@ def export_csv(dirpath: str = "python_app/data") -> None:
                     _fmt_float(r.get("area_ha")),
                 ])
 
-# 2 - Tratamentos
-        #gera um arquivo com resumo por tratamento
-        fpath_t = os.path.join(dirpath, "export_tratamentos.csv")
-        with open(fpath_t, "w", newline="", encoding="utf-8") as f:
-            #separador com ; para ler no R
-            w = csv.writer(f, delimiter=";")
-            #define cabecalhos
-            w.writerow(["cultura", "manejo", "area_ha", "area_eq_tratada", "n_produtos"])
-            for t in tratamentos:
-                w.writerow([
-                    t.get("cultura", ""),
-                    t.get("manejo", ""),
-                    _fmt_float(t.get("area_ha")),
-                    _fmt_float(t.get("area_eq_tratada")),
-                    len(t.get("produtos", [])),
-                ])
+    # 2 - Tratamentos
+    #gera um arquivo com resumo por tratamento
+    fpath_t = os.path.join(dirpath, "export_tratamentos.csv")
+    with open(fpath_t, "w", newline="", encoding="utf-8") as f:
+        #separador com ; para ler no R
+        w = csv.writer(f, delimiter=";")
+        #define cabecalhos
+        w.writerow(["cultura", "manejo", "area_ha", "area_eq_tratada", "n_produtos"])
+        for t in tratamentos:
+            w.writerow([
+                t.get("cultura", ""),
+                t.get("manejo", ""),
+                _fmt_float(t.get("area_ha")),
+                _fmt_float(t.get("area_eq_tratada")),
+                len(t.get("produtos", [])),
+            ])
 
-# 3 - Produtos 
-        #gera um arquivo com 1 produto por linha
-        fpath_p = os.path.join(dirpath, "export_produtos.csv")
-        with open(fpath_p, "w", newline="", encoding="utf-8") as f:
-            #separador com ; para ler no R
-            w = csv.writer(f, delimiter=";")
-            #define cabecalhos
-            w.writerow(["cultura", "manejo", "ativo", "dose_ha", "unidade", "aplicacoes", "total"])
-            for t in tratamentos:
-                cultura = t.get("cultura", "")
-                manejo = t.get("manejo", "")
-                for p in t.get("produtos", []):
-                    w.writerow([
-                        cultura,
-                        manejo,
-                        p.get("ativo", ""),
-                        p.get("dose_ha", ""),
-                        p.get("unidade", ""),
-                        p.get("aplicacoes", ""),
-                        _fmt_float(p.get("total")),
-                    ])
+    # 3 - Produtos 
+    #gera um arquivo com 1 produto por linha
+    fpath_p = os.path.join(dirpath, "export_produtos.csv")
+    with open(fpath_p, "w", newline="", encoding="utf-8") as f:
+        #separador com ; para ler no R
+        w = csv.writer(f, delimiter=";")
+        #define cabecalhos
+        w.writerow(["cultura", "manejo", "ativo", "dose_ha", "unidade", "aplicacoes", "total"])
+        for t in tratamentos:
+            cultura = t.get("cultura", "")
+            manejo = t.get("manejo", "")
+            for p in t.get("produtos", []):
+                w.writerow([
+                    cultura,
+                    manejo,
+                    p.get("ativo", ""),
+                    p.get("dose_ha", ""),
+                    p.get("unidade", ""),
+                    p.get("aplicacoes", ""),
+                    _fmt_float(p.get("total")),
+                ])
 
 
 #---------------------
