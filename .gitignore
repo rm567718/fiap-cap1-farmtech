@@ -1,15 +1,47 @@
 # NUNCA versionar chaves/segredos
 .ssh/
 *.env
+.env
+*.key
+*.pem
 
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+.venv/
+venv/
+ENV/
+env/
+.python-version
 
 # R / RStudio
 .Rhistory
 .RData
 .Rproj.user
+.Ruserdata
+
+# Arduino / ESP32
+# Pastas de build e cache do Arduino CLI / PlatformIO
+.build/
+.cache/
+.pio/
+.pioenvs/
+.piolibdeps/
+.pio/build/
+.dtmp/
+*.elf
+*.bin
+*.hex
+
+# Arquivos de configuração locais (não versionar)
+*.vscode/
+*.idea/
+*.DS_Store
+Thumbs.db
 
 # Dados gerados
 python_app/data/*.csv
@@ -17,3 +49,8 @@ python_app/data/*.csv
 # Vídeos/arquivos grandes
 *.mp4
 *.mov
+*.avi
+*.mkv
+*.zip
+*.tar.gz
+*.rar
