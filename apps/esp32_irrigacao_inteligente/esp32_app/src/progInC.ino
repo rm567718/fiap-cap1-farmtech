@@ -17,6 +17,9 @@
 #define PIN_DHT 15      //Sensor DHT22 (usado para simular medidor de umidade solo)
 #define PIN_RELAY 26    //Rele que aciona a bomba d'agua
 
+#define RAIN_MM_THRESHOLD  1.0f     // ajuste o limiar que VOCÊ quer
+#define POP_THRESHOLD      60       // ajuste o limiar que VOCÊ quer
+
 // Configura DHT no pino definido 
 #define DHTTYPE DHT22
 DHT dht(PIN_DHT, DHTTYPE);
@@ -25,9 +28,15 @@ DHT dht(PIN_DHT, DHTTYPE);
 float HUM_MIN = 40.0;   //umidade minima
 float PH_MIN = 5.5;     //ph minimo
 float PH_MAX = 7.5;     //ph maximo
+float RAIN_MM = 0.0f;   // precipitacao
+int   POP     = 0;      // probabilidade de chuva
 
 //controle de chuva: se tiver previsao de chuva interrompe a irrigacao
 bool rainBlock = false;
+
+// === Cole aqui o TOKEN (formato: TOKEN RAIN_MM=2.4;POP=68) ===
+// Quando quiser atualizar, basta mudar esta string e recompilar.
+String WEATHER_TOKEN = "TOKEN RAIN_MM=0.8;POP=55";
 
 // converte o valor analogico do LDR para escala de PH (0-14)
 float mapPh(int adc) {
@@ -39,15 +48,42 @@ bool readBoolBtn(int pin) {
   return digitalRead(pin) == LOW;
 }
 
-// Lê comandos enviados via Monitor Serial para simular chuva 
-// "RAIN=0" (sem chuva) ou "RAIN=1" (chuva detectada)
+
+// analisa o token e compara com o threshold para validar se vai ou noa chover
+static void parseWeatherToken(const String& token) {
+  String s = token; 
+  s.trim();
+
+  int rainIdx = s.indexOf("RAIN_MM=");
+  if (rainIdx >= 0) {
+    int end = s.indexOf(';', rainIdx);
+    String val = (end > 0) ? s.substring(rainIdx + 8, end) : s.substring(rainIdx + 8);
+    RAIN_MM = val.toFloat();
+  }
+
+  int popIdx = s.indexOf("POP=");
+  if (popIdx >= 0) {
+    int end = s.indexOf(';', popIdx);
+    String val = (end > 0) ? s.substring(popIdx + 4, end) : s.substring(popIdx + 4);
+    POP = val.toInt();
+  }
+  rainBlock = (RAIN_MM >= RAIN_MM_THRESHOLD) || (POP >= POP_THRESHOLD);
+}
+
+// lê o TOKEN interno e depois lê comandos enviados via Monitor Serial para simular chuva 
 void readRainFlag() {
+  // 1) Sempre lê o TOKEN interno (colado na variável)
+  if (WEATHER_TOKEN.length() > 0) {
+    parseWeatherToken(WEATHER_TOKEN);
+  }
+
+  // 2) Compatibilidade legada: aceitar RAIN=1/0/ON/OFF/TRUE/FALSE via Serial (opcional)
   while (Serial.available() > 0) {
     String s = Serial.readStringUntil('\n');
     s.trim(); s.toUpperCase();
     if (s.startsWith("RAIN=")) {
-      String v = s.substring(5); v.trim();
-      if (v == "1" || v == "TRUE" || v == "ON") rainBlock = true;
+      String v = s.substring(5); v.trim(); v.toUpperCase();
+      if (v == "1" || v == "TRUE" || v == "ON")       rainBlock = true;
       else if (v == "0" || v == "FALSE" || v == "OFF") rainBlock = false;
     }
   }
@@ -73,7 +109,7 @@ void setup() {
 
   // mensagem inicial
   Serial.println("FarmTech Fase2");
-  Serial.println("Comandos: RAIN=0 ou RAIN=1");
+  Serial.println("RAIN=0 (sem previsao de chuva) ou RAIN=1 (com previsao de chuva)");
 }
 
 // loop para leitura dos sensores e decide se ativa ou nao o Rele
