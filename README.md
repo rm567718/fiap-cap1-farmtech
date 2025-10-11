@@ -1,64 +1,111 @@
-# FIAP CAP 1 - FarmTech Solutions
+🌾 FIAP CAP 1 – FarmTech Solutions
 
-Projeto acadêmico desenvolvido no curso de Inteligência Artificial (FIAP), com foco em soluções para Agricultura Digital.
+  Projeto acadêmico desenvolvido no curso de Inteligência Artificial (FIAP), com foco em soluções para Agricultura Digital.
+  O grupo FarmTech Solutions propõe o desenvolvimento de sistemas inteligentes para monitoramento, automação e análise de dados agrícolas, integrando Python, R e IoT (ESP32).
 
----
+___________________________________________________________________________
+🗂 ESTRUTURA GERAL
 
-## 📌 Fase 1
-- Cálculo de área plantada
-- Monitoramento climático
-- Scripts em Python e R para análise de dados
-- Estrutura inicial disponível em:
-  - `python_app/`
-  - `r_app/`
-  
+    fiap-cap1-farmtech/
+    │
+    ├─ docs/                                # Documentação, imagens e relatórios
+    │   ├─ fase1_manejo_culturas/
+    │   └─ fase2_irrigacao_inteligente/
+    │
+    ├─ apps/
+    │   ├─ cli_manejo_culturas/             # Fase 1 (Python + R)
+    │   │   ├─ python_app/
+    │   │   └─ r_app/
+    │   │
+    │   └─ esp32_irrigacao_inteligente/     # Fase 2 (ESP32 + API + R)
+    │       ├─ esp32_app/
+    │       ├─ python_integration/
+    │       └─ r_integration/
+    │
+    └─ README.md                            # Este arquivo
 
----
+___________________________________________________________________________
+📘 FASE 1 - MANEJO E CALCULO DE INSUMOS
 
-## 📌 Fase 2 – Sistema de Irrigação Inteligente
-Nesta etapa, evoluímos para a simulação de um **sistema automatizado de irrigação** utilizando **ESP32 no Wokwi**.  
+Nesta primeira fase, foi desenvolvido um sistema em Python e R para o planejamento de manejo agrícola, permitindo o cálculo de áreas, doses de produtos e análise de tratamentos.
 
-### 🔧 Sensores e substituições
-- **Nitrogênio (N)** → Botão verde
-- **Fósforo (P)** → Botão verde
-- **Potássio (K)** → Botão verde
-- **pH da terra** → LDR (Light Dependent Resistor)
-- **Umidade do solo** → DHT22 (sensor de umidade)
-- **Bomba d’água** → Relé
+🔹 Funcionalidades principais
 
-### 🎯 Objetivo
-Acionar automaticamente a irrigação (relé) de acordo com:
-- Níveis de NPK
-- Faixa de pH ideal para a cultura escolhida
-- Umidade mínima necessária
+      Cálculo de área plantada (retangular ou pivô circular)
 
----
+      Estimativa de insumos e aplicações por hectare
 
+      Registro de manejos e produtos utilizados
 
----
+      Exportação de dados em CSV para análise no R
 
-## ▶️ Como rodar
-1. Abra o circuito no [Wokwi](https://wokwi.com/).  
-2. Carregue o código em `esp32_app/src/`.  
-3. Use o **Serial Monitor** para visualizar leituras (NPK, pH, umidade).  
-4. Simule chuva via teclado/Serial (opcional, integração Python).  
-
----
-
-## 🚀 Próximos passos
-- [ ] Montagem inicial do circuito no Wokwi  
-- [ ] Código base ESP32 (setup + sensores)  
-- [ ] Documentação da lógica de irrigação para uma cultura escolhida  
-- [ ] Gravação do vídeo de até 5 minutos (demonstração)  
-
----
-
-## 👥 Equipe
-- Everton  
-- Matheus
-- Xavier
-- Nayara  
-- Julia  
+🔗 Saiba mais: apps/cli_manejo_culturas/python_app/README.md
 
 
+___________________________________________________________________________
+📘 FASE 2 - SISTEMA DE IRRIGCAÇAO INTELIGENTE (IoT + API)
 
+Evolução do projeto para um sistema automatizado de irrigação, utilizando o ESP32 no Wokwi e integração com dados meteorológicos via API pública (Open-Meteo).
+
+🎯 Objetivo
+
+    Acionar automaticamente a bomba d’água (relé) com base em:
+
+    Níveis de nutrientes simulados (NPK)
+
+    Faixa de pH ideal (via LDR)
+
+    Umidade mínima (via DHT22)
+
+    Previsão de chuva e probabilidade de precipitação (POP) fornecidas pela integração Python
+
+🔧 Sensores simulados no Wokwi
+
+    Parâmetro	      Sensor/Ferramenta      Pino ESP32
+    Nitrogênio (N)	  Botão verde          12
+    Fósforo (P)	      Botão verde          13
+    Potássio (K)      Botão verde          14
+    pH                LDR                  34
+    Umidade	          DHT22                15
+    Bomba             Relé                 26
+
+🔬 Lógica de decisão da irrigação
+
+O ESP32 avalia continuamente as leituras dos sensores e o token meteorológico.
+
+    Condição                                  Ação
+    Umidade < 40%                             Irrigação permitida
+    pH entre 5.5 e 7.5	                      pH ok
+    Pelo menos 1 botão NPK ativo	            Nutrientes ok
+    Chuva prevista (rainBlock = true)	        Irrigação bloqueada
+    Todas as condições válidas	              Relé (bomba) ligado
+
+🔗 Guia detalhado de execução:
+    
+    apps/esp32_irrigacao_inteligente/esp32_app/README.md
+
+
+___________________________________________________________________________
+🚀 Próximos passos
+
+     Ir além – Análise em R (opcional 2):
+     
+     Finalizar vídeo de demonstração (≤ 5 min)
+
+     Submeter documentação no portal FIAP
+
+     
+___________________________________________________________________________   
+👥 Equipe FarmTech Solutions
+
+    Everton
+    Xavier	           
+    Nayara	            
+    Julia
+    Matheus
+
+___________________________________________________________________________
+🧾 Licença
+
+    Projeto acadêmico, de uso educacional, desenvolvido no âmbito da disciplina
+    CAP 1 – Campo da Inovação (FIAP).
