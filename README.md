@@ -11,6 +11,7 @@ ___________________________________________________________________________
     ├─ docs/                                # Documentação, imagens e relatórios
     │   ├─ fase1_manejo_culturas/
     │   └─ fase2_irrigacao_inteligente/
+    │   └─ fase.../
     │
     ├─ apps/
     │   ├─ cli_manejo_culturas/             # Fase 1 (Python + R)
@@ -18,10 +19,12 @@ ___________________________________________________________________________
     │   │   └─ r_app/
     │   │
     │   └─ esp32_irrigacao_inteligente/     # Fase 2 (ESP32 + API + R)
-    │       ├─ esp32_app/
-    │       ├─ python_integration/
-    │       └─ r_integration/
-    │
+    │   │   ├─ esp32_app/
+    │   │   ├─ python_integration/
+    │   │   └─ r_integration/
+    │   │
+    │   └─ novos_projetos.../               # Fase...
+    │   
     └─ README.md                            # Este arquivo
 
 ___________________________________________________________________________
