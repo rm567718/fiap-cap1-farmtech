@@ -38,9 +38,26 @@ print_head <- function(df, title=NULL, n=5) {
 
 # -------------------------
 # Caminhos
+# - Detecta automaticamente a pasta 'python_app/data' tanto
+#   quando os CSVs forem gerados dentro de apps/cli_manejo_culturas
+#   quanto quando forem gerados na raiz do projeto.
 # -------------------------
-trat_path <- "../python_app/data/export_tratamentos.csv"
-prod_path <- "../python_app/data/export_produtos.csv"
+resolve_data_dir <- function() {
+  candidates <- c(
+    "../python_app/data",            # esperado quando executa de apps/cli_manejo_culturas
+    "../../python_app/data",         # caso o working dir mude um nível acima
+    "python_app/data",               # quando gerado na raiz e executado da raiz
+    "../../../python_app/data"       # fallback extra
+  )
+  for (p in candidates) {
+    if (dir.exists(p)) return(p)
+  }
+  return(candidates[1])
+}
+
+DATA_DIR <- resolve_data_dir()
+trat_path <- file.path(DATA_DIR, "export_tratamentos.csv")
+prod_path <- file.path(DATA_DIR, "export_produtos.csv")
 
 trat <- read_csv_safe(trat_path)
 prod <- read_csv_safe(prod_path)

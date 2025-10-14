@@ -3,7 +3,7 @@
   Projeto acadêmico desenvolvido no curso de Inteligência Artificial (FIAP), com foco em soluções para Agricultura Digital.
   O grupo FarmTech Solutions propõe o desenvolvimento de sistemas inteligentes para monitoramento, automação e análise de dados agrícolas, integrando Python, R e IoT (ESP32).
 
-📺 **Vídeo de Demonstração:** [Assista no YouTube](https://youtu.be/dNbRp5jnO0Y)
+📺 **Vídeo de Demonstração:** [Assista no YouTube](https://www.youtube.com/watch?v=dNbRp5jnO0Y&t=87s)
 
 ___________________________________________________________________________
 🗂 ESTRUTURA GERAL
