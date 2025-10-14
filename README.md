@@ -5,6 +5,8 @@
 
 📺 **Vídeo de Demonstração:** [Assista no YouTube](https://www.youtube.com/watch?v=dNbRp5jnO0Y&t=87s)
 
+[![Assista ao vídeo](https://img.shields.io/badge/YouTube-Assista-red?logo=youtube)](https://www.youtube.com/watch?v=dNbRp5jnO0Y&t=87s)
+
 ___________________________________________________________________________
 🗂 ESTRUTURA GERAL
 
