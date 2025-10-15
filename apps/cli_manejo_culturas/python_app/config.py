@@ -6,13 +6,13 @@ sementes por utilizarem outros cálculos de insumos;
 4) Evitei o uso de marcas comerciais dos produtos
 """
  
-# definicao culturas do sistema
+#definição culturas do sistema
 config_culturas = ["Milho","Soja","Cafe"]
 
-# definicao das classes de manejo
+#definição das classes de manejo
 classes_manejo = ["Herbicida", "Fungicida", "Inseticida", "Biologico"]
 
-# listagem dos produtos (ativos) relativos a cada classe em cada cultura
+#listagem dos produtos (ativos) relativos a cada classe em cada cultura
 ativo_cultura_manejo = {
     "Milho": {
         "Herbicida":   ["glyphosate", "atrazine", "nicosulfuron"],

@@ -1,13 +1,14 @@
-🌾 FIAP CAP 1 – FarmTech Solutions
+FIAP CAP 1 – FarmTech Solutions
 
   Projeto acadêmico desenvolvido no curso de Inteligência Artificial (FIAP), com foco em soluções para Agricultura Digital.
   O grupo FarmTech Solutions propõe o desenvolvimento de sistemas inteligentes para monitoramento, automação e análise de dados agrícolas, integrando Python, R e IoT (ESP32).
 
-📺 **Vídeo de Demonstração:** [Assista no YouTube](https://www.youtube.com/watch?v=dNbRp5jnO0Y&t=87s)
+📺 **Vídeo de Demonstração:** [Assista no YouTube](https://youtu.be/x8_bTM4j_do)
 
-[![Assista ao vídeo](https://img.shields.io/badge/YouTube-Assista-red?logo=youtube)](https://www.youtube.com/watch?v=dNbRp5jnO0Y&t=87s)
+[![Assista ao vídeo](https://img.shields.io/badge/YouTube-Assista-red?logo=youtube)](https://youtu.be/x8_bTM4j_do)
 
-___________________________________________________________________________
+---
+
 🗂 ESTRUTURA GERAL
 
     fiap-cap1-farmtech/
@@ -28,28 +29,29 @@ ___________________________________________________________________________
     │   │   └─ r_integration/
     │   │
     │   └─ novos_projetos.../               # Fase...
-    │   
+    │
     └─ README.md                            # Este arquivo
 
-___________________________________________________________________________
+---
+
 📘 FASE 1 - MANEJO E CALCULO DE INSUMOS
 
 Nesta primeira fase, foi desenvolvido um sistema em Python e R para o planejamento de manejo agrícola, permitindo o cálculo de áreas, doses de produtos e análise de tratamentos.
 
 🔹 Funcionalidades principais
 
-      Cálculo de área plantada (retangular ou pivô circular)
+    Cálculo de área plantada (retangular ou pivô circular)
 
-      Estimativa de insumos e aplicações por hectare
+    Estimativa de insumos e aplicações por hectare
 
-      Registro de manejos e produtos utilizados
+    Registro de manejos e produtos utilizados
 
-      Exportação de dados em CSV para análise no R
+    Exportação de dados em CSV para análise no R
 
 🔗 Saiba mais: apps/cli_manejo_culturas/python_app/README.md
 
+---
 
-___________________________________________________________________________
 📘 FASE 2 - SISTEMA DE IRRIGCAÇAO INTELIGENTE (IoT + API)
 
 Evolução do projeto para um sistema automatizado de irrigação, utilizando o ESP32 no Wokwi e integração com dados meteorológicos via API pública (Open-Meteo).
@@ -88,30 +90,29 @@ O ESP32 avalia continuamente as leituras dos sensores e o token meteorológico.
     Todas as condições válidas	              Relé (bomba) ligado
 
 🔗 Guia detalhado de execução:
-    
+
     apps/esp32_irrigacao_inteligente/esp32_app/README.md
 
+---
 
-___________________________________________________________________________
 🚀 Próximos passos
 
-     ✅ Vídeo de demonstração finalizado (disponível no YouTube)
-     
-     Ir além – Análise em R (opcional 2)
+    ✅ Vídeo de demonstração finalizado (disponível no YouTube)
 
-     Submeter documentação no portal FIAP
+    Ir além – Análise em R (opcional 2)
 
-     
-___________________________________________________________________________   
+    Submeter documentação no portal FIAP
+
+---
+
 👥 Equipe FarmTech Solutions
 
-    Everton
-    Xavier	           
-    Nayara	            
-    Julia
-    Matheus
+ Everton Marinho Souza: RM568137
+Julia Gutierres Fernandes Souza: RM568296
+Matheus Ribeiro Martelletti: RM566767
+Raimunda Nayara Mendes dos Santos: RM567718
+Xavier: RM567082
 
-___________________________________________________________________________
 🧾 Licença
 
     Projeto acadêmico, de uso educacional, desenvolvido no âmbito da disciplina

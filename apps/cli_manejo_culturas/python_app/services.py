@@ -1,42 +1,42 @@
-# Services: possui as regras de negocio e os calculos
-# OBS: sem input(), somente as funcoes
+#Services: possui as regras de negócio e os cálculos
+#OBS: sem input(), somente as funções
 
-# definicao de pi para calculo de area circular
+#definição de pi para cálculo de área circular
 pi = 3.141592653589793
 
 # converter m2 para hectares
 def m2_to_ha(area_m2: float) -> float:
     return float(area_m2) / 10000
 
-# valida se o valor de ## é positivo e o nome é valido
+#valida se o valor é positivo e o nome é válido
 def validar_positivo(valor: float, nome: str) -> None:
     
     # tenta colocar valor em float
     try:
         v = float(valor)
     
-    # se nao satisfeito, avisa o nome do campo e o valor incorreto
+    #se não satisfeito, avisa o nome do campo e o valor incorreto
     except Exception as e:
         raise ValueError(f"{nome} inválido: {valor!r}") from e
     
-    # se satisfeito mas o valor é negativo, avisa o valor incorreto
+    #se satisfeito mas o valor é negativo, avisa o valor incorreto
     if v <=0:
         raise ValueError(f"{nome} deve ser > 0. Recebido: {v}")
 
 
 # ------------------------
-# CALCULO DAS AREAS 
+#CÁLCULO DAS ÁREAS 
 
-# calculo da area  retangular
+#cálculo da área retangular
 def calc_area_retangulo(largura_m: float, comprimento_m: float) -> dict:
     
-    #confere se largura é valido
+    #confere se largura é válida
     validar_positivo(largura_m, "largura (m)")
 
-    #confere se comprimento é valido
+    #confere se comprimento é válido
     validar_positivo(comprimento_m, "comprimento (m)")
 
-    #calcula a area em metros quadrados
+    #calcula a área em metros quadrados
     area_m2 = float(largura_m) * float(comprimento_m)
 
     #retorno do calculo com parametros calculados
@@ -53,7 +53,7 @@ def calc_area_circulo(raio_pivo_m: float) -> dict:
     #confere se raio é valido
     validar_positivo(raio_pivo_m, "raio pivo (m)")
 
-    #calcula a area em metros quadrados
+    #calcula a área em metros quadrados
     area_m2 = pi * (float(raio_pivo_m) **2 )
 
     #retorno do calculo com parametros calculados

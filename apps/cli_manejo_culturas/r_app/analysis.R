@@ -14,7 +14,10 @@ read_csv_safe <- function(path) {
   }
   df <- tryCatch(
     read.csv(path, sep = ";", dec = ".", stringsAsFactors = FALSE),
-    error = function(e) { message(sprintf("Erro lendo %s: %s", path, e$message)); NULL }
+    error = function(e) {
+      message(sprintf("Erro lendo %s: %s", path, e$message))
+      NULL
+    }
   )
   df
 }
@@ -22,17 +25,24 @@ read_csv_safe <- function(path) {
 num <- function(x) suppressWarnings(as.numeric(x))
 
 #exibicao em formato tabela
-print_table <- function(df, title=NULL) {
-  if (!is.null(title)) cat("\n", title, "\n", sep="")
-  if (is.null(df) || nrow(df)==0) { cat("(vazio)\n"); return(invisible(NULL)) }
+print_table <- function(df, title = NULL) {
+  if (!is.null(title)) cat("\n", title, "\n", sep = "")
+  if (is.null(df) || nrow(df) == 0) {
+    cat("(vazio)\n")
+    return(invisible(NULL))
+  }
   print(df, row.names = FALSE, right = FALSE)
 }
 
 #contagem de linhas exibidas e totais para head
-print_head <- function(df, title=NULL, n=5) {
-  if (!is.null(title)) cat("\n", title, "\n", sep="")
-  if (is.null(df) || nrow(df)==0) { cat("(vazio)\n"); return(invisible(NULL)) }
-  cat(sprintf("(mostrando as %d primeiras de %d linhas)\n", min(n, nrow(df)), nrow(df)))
+print_head <- function(df, title = NULL, n = 5) {
+  if (!is.null(title)) cat("\n", title, "\n", sep = "")
+  if (is.null(df) || nrow(df) == 0) {
+    cat("(vazio)\n")
+    return(invisible(NULL))
+  }
+  cat(sprintf("(mostrando as %d primeiras de %d linhas)\n",
+              min(n, nrow(df)), nrow(df)))
   print(utils::head(df, n), row.names = FALSE, right = FALSE)
 }
 
@@ -44,20 +54,20 @@ print_head <- function(df, title=NULL, n=5) {
 # -------------------------
 resolve_data_dir <- function() {
   candidates <- c(
-    "../python_app/data",            # esperado quando executa de apps/cli_manejo_culturas
-    "../../python_app/data",         # caso o working dir mude um nível acima
-    "python_app/data",               # quando gerado na raiz e executado da raiz
-    "../../../python_app/data"       # fallback extra
+    "../python_app/data",  # esperado quando executa de apps/cli_manejo_culturas
+    "../../python_app/data",  # caso o working dir mude um nível acima
+    "python_app/data",  # quando gerado na raiz e executado da raiz
+    "../../../python_app/data"  # fallback extra
   )
   for (p in candidates) {
     if (dir.exists(p)) return(p)
   }
-  return(candidates[1])
+  candidates[1]
 }
 
-DATA_DIR <- resolve_data_dir()
-trat_path <- file.path(DATA_DIR, "export_tratamentos.csv")
-prod_path <- file.path(DATA_DIR, "export_produtos.csv")
+data_dir <- resolve_data_dir()
+trat_path <- file.path(data_dir, "export_tratamentos.csv")
+prod_path <- file.path(data_dir, "export_produtos.csv")
 
 trat <- read_csv_safe(trat_path)
 prod <- read_csv_safe(prod_path)
@@ -68,10 +78,10 @@ cat("\n
 # BLOCO 1 — RESUMOS E TOTAIS
 # =========================================================\n")
 
-print_head(trat, title="-- Tratamentos cadastrados --", n=5)
-print_head(prod, title="-- Produtos utilizados --",     n=5)
+print_head(trat, title = "-- Tratamentos cadastrados --", n = 5)
+print_head(prod, title = "-- Produtos utilizados --", n = 5)
 
-##Áreas por cultura (média/desvio de ha) 
+## Áreas por cultura (média/desvio de ha)
 if (!is.null(trat) && nrow(trat) > 0) {
   trat$area_ha <- num(trat$area_ha)
 
@@ -92,7 +102,8 @@ if (!is.null(trat) && nrow(trat) > 0) {
 ## -- Total consumido por produto
 if (!is.null(prod) && nrow(prod) > 0) {
   prod$total <- num(prod$total)
-  total_por_ativo <- aggregate(total ~ ativo + unidade, data = prod, sum, na.rm = TRUE)
+  total_por_ativo <- aggregate(total ~ ativo + unidade, data = prod, sum,
+                               na.rm = TRUE)
   names(total_por_ativo) <- c("Ativo", "Unidade", "Total Kg/Lt.")
   total_por_ativo$`Total Kg/Lt.` <- round(total_por_ativo$`Total Kg/Lt.`, 4)
 
@@ -114,7 +125,9 @@ cat("\n
 if (!is.null(trat) && nrow(trat) > 0) {
   trat$area_ha          <- num(trat$area_ha)
   trat$area_eq_tratada  <- num(trat$area_eq_tratada)
-  trat$apps_est <- ifelse(trat$area_ha > 0, trat$area_eq_tratada / trat$area_ha, NA_real_)
+  trat$apps_est <- ifelse(trat$area_ha > 0,
+                          trat$area_eq_tratada / trat$area_ha,
+                          NA_real_)
 
   agg_mean_apps <- aggregate(apps_est ~ manejo, data = trat, mean, na.rm = TRUE)
   agg_sd_apps   <- aggregate(apps_est ~ manejo, data = trat, sd,   na.rm = TRUE)
@@ -139,7 +152,7 @@ if (!is.null(prod) && nrow(prod) > 0) {
   top5 <- head(top5, 5)
   names(top5) <- c("Ativo", "Unidade", "Total Kg/Lt.", "Rank")
   top5$`Total Kg/Lt.` <- round(top5$`Total Kg/Lt.`, 4)
-  print_table(top5[, c("Rank","Ativo","Unidade","Total Kg/Lt.")],
+  print_table(top5[, c("Rank", "Ativo", "Unidade", "Total Kg/Lt.")],
               "-- Top 5 produtos por consumo --")
 } else {
   cat("\n-- Top 5 produtos por consumo --\n(vazio)\n")
@@ -150,9 +163,12 @@ if (!is.null(prod) && nrow(prod) > 0) {
 if (!is.null(prod) && nrow(prod) > 0) {
   prod$dose_ha <- num(prod$dose_ha)
 
-  agg_mean_dose <- aggregate(dose_ha ~ ativo + unidade, data = prod, mean, na.rm = TRUE)
-  agg_sd_dose   <- aggregate(dose_ha ~ ativo + unidade, data = prod, sd,   na.rm = TRUE)
-  dose_stats <- merge(agg_mean_dose, agg_sd_dose, by = c("ativo","unidade"), all = TRUE)
+  agg_mean_dose <- aggregate(dose_ha ~ ativo + unidade, data = prod, mean,
+                             na.rm = TRUE)
+  agg_sd_dose <- aggregate(dose_ha ~ ativo + unidade, data = prod, sd,
+                           na.rm = TRUE)
+  dose_stats <- merge(agg_mean_dose, agg_sd_dose,
+                      by = c("ativo", "unidade"), all = TRUE)
 
   names(dose_stats) <- c("Ativo", "Unidade", "Dose média", "Dose desvio")
   dose_stats$`Dose média`  <- round(dose_stats$`Dose média`,  4)
@@ -164,10 +180,11 @@ if (!is.null(prod) && nrow(prod) > 0) {
   cat("\n-- Dose/ha por produto --\n(vazio)\n")
 }
 
-## Área total equivalente tratada por cultura 
+## Área total equivalente tratada por cultura
 if (!is.null(trat) && nrow(trat) > 0) {
   trat$area_eq_tratada <- num(trat$area_eq_tratada)
-  area_eq_cult <- aggregate(area_eq_tratada ~ cultura, data = trat, sum, na.rm = TRUE)
+  area_eq_cult <- aggregate(area_eq_tratada ~ cultura, data = trat, sum,
+                            na.rm = TRUE)
   names(area_eq_cult) <- c("Cultura", "Hectares")
   area_eq_cult$Hectares <- round(area_eq_cult$Hectares, 4)
 
@@ -189,21 +206,25 @@ if (!requireNamespace("jsonlite", quietly = TRUE)) {
 }
 library(jsonlite)
 
-#parâmetros para analise cruzada
-LAT <- -23.55   # São Paulo (exemplo). Troque p/ a fazenda do cliente.
-LON <- -46.63
-WX_DAYS <- 7
-LIM_CHUVA_MM <- 2       # até 2 mm/dia = ok
-LIM_VENTO_KMH <- 18     # até 18 km/h = ok para pulverização
-TEMP_MIN_OK  <- 15      # 15–32 °C = janela boa
-TEMP_MAX_OK  <- 32
+# parâmetros para análise cruzada
+lat <- -23.55   # São Paulo (exemplo). Troque p/ a fazenda do cliente.
+lon <- -46.63
+wx_days <- 7
+lim_chuva_mm <- 2       # até 2 mm/dia = ok
+lim_vento_kmh <- 18     # até 18 km/h = ok para pulverização
+temp_min_ok <- 15      # 15–32 °C = janela boa
+temp_max_ok <- 32
 
-safe_fromJSON <- function(url) {
-  tryCatch(jsonlite::fromJSON(url), error = function(e) { message("Falha na API: ", e$message); NULL })
+safe_from_json <- function(url) {
+  tryCatch(jsonlite::fromJSON(url),
+           error = function(e) {
+             message("Falha na API: ", e$message)
+             NULL
+           })
 }
 
 #requisicao pela ap open-meteo
-get_weather <- function(lat, lon, start = Sys.Date(), days = WX_DAYS) {
+get_weather <- function(lat, lon, start = Sys.Date(), days = wx_days) {
   end <- start + (days - 1)
   url <- paste0(
     "https://api.open-meteo.com/v1/forecast?",
@@ -212,9 +233,9 @@ get_weather <- function(lat, lon, start = Sys.Date(), days = WX_DAYS) {
     "&daily=temperature_2m_mean,precipitation_sum,wind_speed_10m_max",
     "&timezone=auto",
     "&start_date=", format(as.Date(start), "%Y-%m-%d"),
-    "&end_date=",   format(as.Date(end),   "%Y-%m-%d")
+    "&end_date=", format(as.Date(end), "%Y-%m-%d")
   )
-  x <- safe_fromJSON(url)
+  x <- safe_from_json(url)
   if (is.null(x) || is.null(x$daily)) return(NULL)
   d <- as.data.frame(x$daily)
   names(d) <- c("Data", "Temp_media_C", "Precip_mm", "Vento_max_kmh")
@@ -224,14 +245,15 @@ get_weather <- function(lat, lon, start = Sys.Date(), days = WX_DAYS) {
 
 classificar_janela <- function(df) {
   if (is.null(df) || nrow(df) == 0) return(df)
-  df$Janela <- ifelse(df$Precip_mm > LIM_CHUVA_MM, "Ruim (chuva)",
-                 ifelse(df$Vento_max_kmh > LIM_VENTO_KMH, "Ruim (vento)",
-                   ifelse(df$Temp_media_C < TEMP_MIN_OK | df$Temp_media_C > TEMP_MAX_OK,
-                          "Alerta (temp)", "Boa")))
+  df$Janela <- ifelse(df$Precip_mm > lim_chuva_mm, "Ruim (chuva)",
+                      ifelse(df$Vento_max_kmh > lim_vento_kmh, "Ruim (vento)",
+                             ifelse(df$Temp_media_C < temp_min_ok |
+                                      df$Temp_media_C > temp_max_ok,
+                                    "Alerta (temp)", "Boa")))
   df
 }
 
-wx <- classificar_janela(get_weather(LAT, LON))
+wx <- classificar_janela(get_weather(lat, lon))
 
 if (is.null(wx) || nrow(wx) == 0) {
   cat("(sem dados da API no momento)\n")
@@ -257,11 +279,13 @@ cat("\n
 
 ## Ativos com unidades divergentes
 if (!is.null(prod) && nrow(prod) > 0) {
-  unidades_por_ativo <- aggregate(unidade ~ ativo, data = prod, function(u) length(unique(u)))
+  unidades_por_ativo <- aggregate(unidade ~ ativo, data = prod,
+                                  function(u) length(unique(u)))
   diverg <- subset(unidades_por_ativo, unidade > 1)
   if (nrow(diverg) > 0) {
     names(diverg) <- c("Ativo", "Qtd_unidades_distintas")
-    print_table(diverg[order(-diverg$Qtd_unidades_distintas, diverg$Ativo), ],
+    print_table(diverg[order(-diverg$Qtd_unidades_distintas,
+                             diverg$Ativo), ],
                 "-- Ativos com unidades divergentes --")
   } else {
     cat("\n-- Ativos com unidades divergentes --\n(nenhum)\n")
@@ -274,8 +298,10 @@ if (!is.null(prod) && nrow(prod) > 0) {
 if (!is.null(trat) && nrow(trat) > 0) {
   trat$area_ha         <- num(trat$area_ha)
   trat$area_eq_tratada <- num(trat$area_eq_tratada)
-  invalid_trat <- sum(trat$area_ha <= 0 | trat$area_eq_tratada < 0, na.rm = TRUE)
-  message(sprintf("Checagem: tratamentos com área<=0 ou ha-aplic<0: %d", invalid_trat))
+  invalid_trat <- sum(trat$area_ha <= 0 | trat$area_eq_tratada < 0,
+                      na.rm = TRUE)
+  message(sprintf("Checagem: tratamentos com área<=0 ou ha-aplic<0: %d",
+                  invalid_trat))
 } else {
   message("Checagem: tratamentos (vazio).")
 }
@@ -283,10 +309,12 @@ if (!is.null(trat) && nrow(trat) > 0) {
 if (!is.null(prod) && nrow(prod) > 0) {
   prod$dose_ha    <- num(prod$dose_ha)
   prod$aplicacoes <- num(prod$aplicacoes)
-  invalid_prod <- sum(prod$dose_ha <= 0 | prod$aplicacoes <= 0, na.rm = TRUE)
-  message(sprintf("Checagem: produtos com dose<=0 ou aplicações<=0: %d", invalid_prod))
+  invalid_prod <- sum(prod$dose_ha <= 0 | prod$aplicacoes <= 0,
+                      na.rm = TRUE)
+  message(sprintf("Checagem: produtos com dose<=0 ou aplicações<=0: %d",
+                  invalid_prod))
 } else {
   message("Checagem: produtos (vazio).")
 }
 
-cat("\nOK: análise concluída.\n")
+cat("\nOK: análise concluída.\n\n")

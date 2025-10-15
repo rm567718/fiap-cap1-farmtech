@@ -9,7 +9,7 @@ show_areas_menu = False
 from datetime import date
 
 from typing import Optional
-from python_app.config import (
+from .config import (
     config_culturas,
     classes_manejo,
     ativo_cultura_manejo,
@@ -19,13 +19,13 @@ from python_app.config import (
 )
 
 
-from python_app import services as svc
-from python_app import storage as st
+from . import services as svc
+from . import storage as st
 
 # ------------------------
-# validacao de input numerico e retorno de registros
+# validação de entrada numérica e retorno de registros
 
-# validacao de input decimal
+# validação de entrada decimal
 def ler_float(msg: str) -> float:
     while True:
         try:
@@ -34,7 +34,7 @@ def ler_float(msg: str) -> float:
             print("Valor inválido. Tente novamente (número).")
 
 
-#valida o input inteiro
+#valida a entrada inteira
 def ler_int(msg: str) -> int:
     while True:
         try:
@@ -42,7 +42,7 @@ def ler_int(msg: str) -> int:
         except ValueError:
             print("Valor inválido. Tente novamente (inteiro).")
 
-#Exibe lista numerada e retorna a string escolhida ou None."""
+#Exibe lista numerada e retorna a string escolhida ou None.
 def escolher_em_lista(titulo: str, opcoes: list) -> Optional[str]:
     print(f"\n{titulo}")
     for i, v in enumerate(opcoes, 1):
@@ -53,11 +53,11 @@ def escolher_em_lista(titulo: str, opcoes: list) -> Optional[str]:
     print("Opção inválida.")
     return None
 
-#busca cultura com escolher_em_lista
+#busca cultura usando escolher_em_lista
 def escolher_cultura() -> Optional[str]:
     return escolher_em_lista("Escolha a cultura:", config_culturas)
 
-#busca manejo/tratamento com escolher_em_lista
+#busca manejo/tratamento usando escolher_em_lista
 def escolher_manejo() -> Optional[str]:
     return escolher_em_lista("Escolha o manejo:", classes_manejo)
 
@@ -69,7 +69,7 @@ def br(x, casas=2):
     except Exception:
         return str(x)
 
-#padroniza acentos no formato, caso exita
+#padroniza acentos no formato, caso exista
 def geom_pt(code: str) -> str:
     return {"RETANGULO": "RETÂNGULO", "CIRCULO": "CÍRCULO"}.get(code.upper(), code)
 
@@ -77,7 +77,7 @@ def geom_pt(code: str) -> str:
 # ------------------------
 # AREAS - CRUD por cultura
 
-#de acordo com a cultura selecionada, solicita o formato da area a ser calculada
+#de acordo com a cultura selecionada, solicita o formato da área a ser calculada
 def areas_inserir():
     cultura = escolher_cultura()
     if not cultura:
@@ -87,7 +87,7 @@ def areas_inserir():
     print("[2] Circular (pivo)")
     op = ler_int("Opção: ")
 
-    #retorna o label conforme a opcao escolhida em formato, valida invalidos e erros
+    #retorna o label conforme a opção escolhida em formato, valida inválidos e erros
     try:
         if op == 1:
             largura = ler_float(f"{label_base}: ")
@@ -103,12 +103,12 @@ def areas_inserir():
         print(f"Erro: {e}")
         return
     
-    #cria um index conforme registro e retorna mensagem
+    #cria um índice conforme registro e retorna mensagem
     idx = st.areas_criar(cultura, area)
     print(f"Área adicionada em {cultura}. Índice: {idx} | {geom_pt(area['geometria'])} | {br(area['area_ha'],4)} ha")
 
 
-# lista as areas registradas na cultura, traz retorno se vazio 
+#lista as áreas registradas na cultura, traz retorno se vazio 
 def areas_listar():
     cultura = escolher_cultura()
     if not cultura:
@@ -122,9 +122,9 @@ def areas_listar():
         print(f"[{i}] {r['geometria']} params={r['params']} "
               f"area_m2={r['area_m2']:.2f} area_ha={r['area_ha']:.4f}")
 
-# verifica se tem area ja cadastrada e traz seus indices, depois permite selecionar 
-# novamente a geometria, calcula a nova area, atualiza o registro e por fim confirma. 
-# Trata opcao invalida e erro.
+#verifica se tem área já cadastrada e traz seus índices, depois permite selecionar 
+#novamente a geometria, calcula a nova área, atualiza o registro e por fim confirma. 
+#Trata opção inválida e erro.
 def areas_atualizar():
     cultura = escolher_cultura()
     if not cultura:
@@ -156,7 +156,7 @@ def areas_atualizar():
     except ValueError as e:
         print(f"Erro: {e}")
 
-# verifica se tem area ja cadastrada e depois permite deletar com base no indice do registro.
+#verifica se tem área já cadastrada e depois permite deletar com base no índice do registro.
 def areas_deletar():
     cultura = escolher_cultura()
     if not cultura:
@@ -171,7 +171,7 @@ def areas_deletar():
     print("Deletado." if ok else "Índice inválido.")
 
 
-#permite listar as areas cadastradas das culturas
+#permite listar as áreas cadastradas das culturas
 def areas_listar_especifica(cultura: str):
     vetor = st.areas_listar(cultura)
     if not vetor:
@@ -192,7 +192,7 @@ def tratamentos_inserir():
     if not cultura:
         return
 
-    #Com base no formato do talhao define a area
+    #Com base no formato do talhão define a área
     print("\nGeometria do talhão:")
     print("[1] Retângulo")
     print("[2] Círculo (pivô)")
@@ -223,7 +223,7 @@ def tratamentos_inserir():
     produtos = []
     soma_apps = 0
 
-    #retorna a lista de ativos e permite o cadastro de novas opcoes, conforme necessidade do produtor
+    #retorna a lista de ativos e permite o cadastro de novas opções, conforme necessidade do produtor
     while True:
         print("\nProduto do manejo:")
         ativo = None
@@ -247,7 +247,7 @@ def tratamentos_inserir():
         unidade = input("Unidade (ex.: L/ha, kg/ha): ").strip() or "L/ha"
         aplicacoes = ler_int("Número de aplicações: ")
 
-        #valida os inputs 
+        #valida as entradas 
         try:
             total = svc.total_produto(area_ha, dose_ha, aplicacoes)
         except ValueError as e:
@@ -269,13 +269,13 @@ def tratamentos_inserir():
         if add_mais != "s":
             break
 
-    # calculo da area equivalente tratada 
+    #cálculo da área equivalente tratada 
     try:
         area_eq = svc.area_equivalente_tratada(area_ha, soma_apps) if soma_apps > 0 else 0.0
     except ValueError:
         area_eq = 0.0
     
-    # retorna resumo do tratamento com base no indice
+    #retorna resumo do tratamento com base no índice
     tratamento = {
         "cultura": cultura,
         "manejo": manejo,
@@ -286,13 +286,13 @@ def tratamentos_inserir():
     idx = st.trat_criar(tratamento)
     _print_resumo_tratamento(idx, tratamento)
 
-#exibicao do tratamento no sistema 
+#exibição do tratamento no sistema 
 def _print_resumo_tratamento(idx: int, t: dict):
     print("\n======= RESUMO DO TRATAMENTO =======")
     print(f"Índice: {idx} | Cultura: {t['cultura']} | Manejo: {t['manejo']}")
     print(f"Área do talhão: {br(t['area_ha'],4)} ha\n")
 
-    # Cabeçalho
+    #Cabeçalho
     h = ["#", "Produtos", "Dose/ha", "Unid", "Aplic.", "Total"]
     print(f"{h[0]:>2} │ {h[1]:<26} │ {h[2]:>10} │ {h[3]:<6} │ {h[4]:>6} │ {h[5]:>12}")
     print("───┼────────────────────────────┼────────────┼────────┼────────┼────────────────")
@@ -306,7 +306,7 @@ def _print_resumo_tratamento(idx: int, t: dict):
     print("───┴────────────────────────────┴────────────┴────────┴────────┴────────────────")
     print(f"Área equivalente tratada (ha-aplic): {br(t['area_eq_tratada'],4)}")
 
-#funcao apra retornar os tratamentos cadastrados e permite selecionar entre visao resumida e detalhada
+#função para retornar os tratamentos cadastrados e permite selecionar entre visão resumida e detalhada
 def tratamentos_listar():
     vetor = st.trat_listar()
     if not vetor:
@@ -344,7 +344,7 @@ def tratamentos_listar_detalhado():
     else:
         print("Índice inválido.")
 
-# permite validar os cadastros existentes para somente deletar e inserir novo registro
+#permite validar os cadastros existentes para somente deletar e inserir novo registro
 def tratamentos_atualizar():
     vetor = st.trat_listar()
     if not vetor:
@@ -362,7 +362,7 @@ def tratamentos_atualizar():
     else:
         print("Índice inválido.")
 
-# permite validar os cadastros existentes para somente deletar
+#permite validar os cadastros existentes para somente deletar
 def tratamentos_deletar():
     vetor = st.trat_listar()
     if not vetor:
@@ -376,7 +376,7 @@ def tratamentos_deletar():
 # ------------------------
 # EXPORT CSV 
 
-#exporta csv e retorna confirmacao
+#exporta CSV e retorna confirmação
 def exportar_csvs():
     st.export_csv()
     print("CSVs gerados em python_app/data/")
@@ -386,8 +386,8 @@ def exportar_csvs():
 # ------------------------
 # MENU PRINCIPAL
 
-#exibe os itens e busca a funcao conforme input
-#permite validar o input e encerrar corretamente o sistema
+#exibe os itens e busca a função conforme entrada
+#permite validar a entrada e encerrar corretamente o sistema
 def menu():
     while True:
         print("\n===== FARMTECH SOLUTIONS =====\n")

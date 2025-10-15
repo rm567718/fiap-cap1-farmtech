@@ -7,43 +7,43 @@
 import os, csv, json
 
 #Importa as culturas do config.py
-from python_app.config import config_culturas
+from .config import config_culturas
 
 
 #---------------------
-# VETORES EM MEMORIA
+#VETORES EM MEMÓRIA
 
 areas: dict[str, list[dict]] = {c: [] for c in config_culturas}
 tratamentos: list[dict] = []
 
 #---------------------
-# CRUD DE AREAS
+#CRUD DE ÁREAS
 
 def areas_listar(cultura: str) -> list[dict]:
 
-    #confere se a cultura é valida
+    #confere se a cultura é válida
     assert_cultura(cultura)
 
-    #retonar as areas listadas
+    #retorna as áreas listadas
     return areas[cultura]
 
 def areas_criar(cultura: str, area_dict: dict) -> int:
     
-    #confere se a cultura é valida
+    #confere se a cultura é válida
     assert_cultura(cultura)
     
-    #cria uma area para a cultura
+    #cria uma área para a cultura
     areas[cultura].append(area_dict)
  
-    # retorna o indice criado
+    #retorna o índice criado
     return len(areas[cultura]) -1
 
 def areas_atualizar(cultura:  str, idx: int, novo:dict) -> bool:
 
-    #confere se a cultura é valida
+    #confere se a cultura é válida
     assert_cultura(cultura)
 
-    #atualiza a area no indice e retornar true/false
+    #atualiza a área no índice e retorna true/false
     vetor = areas[cultura]
     if 0 <= idx < len(vetor):
         vetor[idx] = novo
@@ -52,10 +52,10 @@ def areas_atualizar(cultura:  str, idx: int, novo:dict) -> bool:
 
 def areas_deletar(cultura: str, idx: int) -> bool:
 
-    #confere se a cultura é valida
+    #confere se a cultura é válida
     assert_cultura(cultura)
 
-    #remove a area no indice e retornar true/false
+    #remove a área no índice e retorna true/false
     vetor = areas[cultura]
     if 0 <= idx < len(vetor):
         vetor.pop(idx)
@@ -63,7 +63,7 @@ def areas_deletar(cultura: str, idx: int) -> bool:
     return False
 
 #---------------------
-# CRUD DE TRATAMENTOS
+#CRUD DE TRATAMENTOS
 
 def trat_listar() -> list[dict]:
     #retorna tratamentos listados
@@ -73,12 +73,12 @@ def trat_criar(trat: dict) -> int:
     #Adiciona um tratamento completo
     tratamentos.append(trat)
     
-    #Retorna o indice criado
+    #retorna o índice criado
     return len(tratamentos) - 1
 
 def trat_atualizar(idx: int, novo: dict) -> bool:
 
-    #atualiza tratamento pelo indice e retorna true/false
+    #atualiza tratamento pelo índice e retorna true/false
     if 0 <= idx < len(tratamentos):
         tratamentos[idx] = novo
         return True
